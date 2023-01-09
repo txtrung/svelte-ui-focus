@@ -1,5 +1,6 @@
 import { get } from "svelte/store";
 import { loadingStore } from "$stores/loading.js";
+import { browser } from '$app/environment';
 
 export const ARROWLEFT = 37;
 export const ARROWRIGHT = 39;
@@ -42,23 +43,25 @@ let old_time, new_time;
 let timeDelay = 0;
 const TIME_DELAY_CONSTANT = 1500;
 
-// xử lí event press key của page / focus component
-window.addEventListener("keydown", (e) => {
-  e.preventDefault();
-  const { keyCode: keyboardCode} = e;
-  // keyHandle(keyCodesDefault[e.keyCode])
-  if ((keyboardCode === 27 || keyboardCode === 10009) && isLoading) {
-    timeDelay = TIME_DELAY_CONSTANT;
-  }
-  new_time = new Date().getTime();
-  if (!old_time) {
-    old_time = new_time - timeDelay;
-  }
-  if (new_time - old_time >= timeDelay + 150) {
-    old_time = new_time;
-    keyHandle(keyCodesDefault[keyboardCode]);
-  }
-});
+if (browser){
+  // xử lí event press key của page / focus component
+  window.addEventListener("keydown", (e) => {
+    e.preventDefault();
+    const { keyCode: keyboardCode} = e;
+    // keyHandle(keyCodesDefault[e.keyCode])
+    if ((keyboardCode === 27 || keyboardCode === 10009) && isLoading) {
+      timeDelay = TIME_DELAY_CONSTANT;
+    }
+    new_time = new Date().getTime();
+    if (!old_time) {
+      old_time = new_time - timeDelay;
+    }
+    if (new_time - old_time >= timeDelay + 150) {
+      old_time = new_time;
+      keyHandle(keyCodesDefault[keyboardCode]);
+    }
+  });
+}
 
 export default function setKeyListener (componentKeyHandle) {
   keyHandle = componentKeyHandle;

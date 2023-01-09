@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte';
-    import Content from '$components/Content.svelte';
-    import Menu from '$components/Menu.svelte';
+    import Content from '$components/content/Content.svelte';
+    import Menu from '$components/app-bar/Menu.svelte';
 
     let hasFocusedChild = false;
     let focused = false;
@@ -13,10 +13,6 @@
 
 </script>
 
-<div class="bg-[#221c35] w-[1440px] h-[810px] flex flex-row">
-    <Menu 
-        hasFocusedChild={hasFocusedChild}
-        focused={focused}
-    />
+<div class="bg-[#221c35] w-[90%] h-screen flex flex-row">
     <Content />
 </div>

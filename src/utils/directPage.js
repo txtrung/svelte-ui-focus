@@ -1,5 +1,5 @@
-import { push, replace, pop } from "svelte-spa-router";
-import { focus } from "store/focus.js";
+// import { push, replace, pop } from "svelte-spa-router";
+import { focus } from "$stores/focus.js";
   
   export const handleRedirectLauncher = (launcherParams = {}) => {
     let result = "";
@@ -57,17 +57,17 @@ import { focus } from "store/focus.js";
   
   
   export function goToPage (url) {
-    push(url);
+  //   push(url);
     focus.resetElement();
   }
   
   export function replaceToPage (url) {
     focus.resetElement();
-    replace(url);
+  //   replace(url);
   }
   
   
   export function backToPreviousPage () {
     focus.resetElement();
-    pop();
+  //   pop();
   }

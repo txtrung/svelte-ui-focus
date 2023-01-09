@@ -2,10 +2,10 @@ import {
   SCROLL_DURATION,
   ONE_SECOND_TIMER,
   TRANSITION_TIMING_FUNCTION,
-} from "utils/constant";
+} from "$utils/constant";
 import {
   focus
-} from "store/focus.js";
+} from "$stores/focus.js";
 import {
   get
 } from "svelte/store";
@@ -14,7 +14,7 @@ import {
   ARROWDOWN,
   ARROWLEFT,
   ARROWRIGHT
-} from "utils/keyboard.js";
+} from "$utils/keyboard.js";
 
 export function smoothHorizontalScrollTransform({
   elementId,
@@ -51,10 +51,21 @@ export function smoothVerticalScrollTransform({
   const scrollElement = document.getElementById(elementScrollId);
   if (!element || !scrollElement) return;
   const distanceScroll = +element.dataset["distanceScrollVertical"] || 0;
+  const distanceHiddenScroll = +element.dataset["distanceHiddenScrollVertical"] || 0;
 
   if (!isHistoryLoad)
     scrollElement.style.transition = `transform ${duration / ONE_SECOND_TIMER}s`;
-  if (distanceScroll > 0) {
+
+  if (!distanceScroll && distanceHiddenScroll >= 0) {
+    // scrollToElm(scrollElement,element,SCROLL_DURATION);
+    console.log('ele.dataset["distanceScrollVertical"]---smoothVerticalScrollTransform');
+    scrollElement.childNodes.forEach((kk) => {
+      kk.style.transform = `translateY(${-distanceHiddenScroll}px)`;
+      kk.style.transition = 'transform 1s';
+    });
+    // return;
+  } else if (distanceScroll > 0) {
+    console.log('distanceScroll  :',distanceScroll);
     scrollElement.style.transform = `translateY(${-distanceScroll}px)`;
   } else {
     scrollElement.style.transform = `translateY(${0}px)`;

@@ -5,7 +5,8 @@
     import { historyStore } from "$stores/history.js";
     import { overlayStore } from "$stores/overlay.js";
     import { onDestroy, onMount } from "svelte";
-	import Menu from "$components/Menu.svelte";
+	import Menu from "$components/app-bar/Menu.svelte";
+	import FocusScroll from "$components/global/FocusScroll.svelte";
 
     export let name = "",
         classElm = "",
@@ -63,14 +64,14 @@
 
 </script>
 
-<div class={classElm} id={idElm} bind:this={content}>
-    {#if menuElm.isShow}
-      <Menu
-        isHidenMenu={menuElm.isHidenMenu}
-        downPosition={menuElm.downPosition}
-        styles={menuElm.styles}
-        parentVertical={menuElm.parentVertical}
-      />
-    {/if}
-    <slot content="body" />
-</div>
+<FocusScroll>
+    <div class="flex" id={idElm} bind:this={content}>
+        <Menu
+            isHidenMenu={menuElm.isHidenMenu}
+            downPosition={menuElm.downPosition}
+            styles={menuElm.styles}
+            parentVertical={"show-home-content"}
+        />
+        <slot content="body" />
+    </div>
+</FocusScroll>

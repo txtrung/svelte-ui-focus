@@ -255,48 +255,70 @@ function createFocus() {
       //Scroll Vertical
       const parentVerticalEle = document.getElementById(parentVertical);
       if (ele && parentVertical && parentVerticalEle) {
-        parentVerticalEle.style.height = "fit-content";
-        parentVerticalEle.style.overflowY = "unset";
-        const rectParentEle = parentVerticalEle.getBoundingClientRect();
-        const transformY = getTranslateY(parentVerticalEle);
-   
+        /// vertical scroll is hiden 
+        const parentVerticalEleHeight = parentVerticalEle?.offsetHeight;
+        const childNodesHeight = Array.from(parentVerticalEle?.childNodes).reduce(
+          (a,b)=>(a+(b?.offsetHeight+parseInt(b?.style.marginBottom)))
+          ,0);
+        /// vertical scroll is hiden 
+        if (parentVerticalEleHeight === childNodesHeight) {
+          parentVerticalEle.style.height = "fit-content";
+          parentVerticalEle.style.overflowY = "unset";
+          const rectParentEle = parentVerticalEle.getBoundingClientRect();
+          const transformY = getTranslateY(parentVerticalEle);
+    
 
-        let screenHeight =
-          window.innerHeight - rectParentEle.top + transformY;
-        // please test this height for me
-        
-        // Vertical Scroll Ads element 
-        const verticalScrollEle = parentVerticalEle.closest(".vertical-scroll");
-        if (verticalScrollEle) {
-          // @ts-ignore
-          screenHeight = verticalScrollEle.offsetHeight + transformY;
-        }
-
-        let position = null;
-        let distanceScrollVertical = 0;
-        let scrollChecking = null;
-        if (
-          scrollPositionValue &&
-          (scrollPosition == "top" || scrollPosition == "bottom")
-        ) {
-          if (scrollPosition == "top") {
-            distanceScrollVertical = scrollPositionValue;
-          }
-          if (scrollPosition == "bottom") {
-            distanceScrollVertical = scrollPositionValue + ele.offsetHeight;
-          }
-        } else {
-          position = (screenHeight - ele.offsetHeight) / 2;
-          distanceScrollVertical = rectEle.top - rectParentEle.top - position;
-          scrollChecking =  parentVerticalEle.offsetHeight - distanceScrollVertical;
+          let screenHeight =
+            window.innerHeight - rectParentEle.top + transformY;
+          // please test this height for me
           
-          if (scrollChecking < screenHeight) {
-            distanceScrollVertical =
-              parentVerticalEle.offsetHeight - screenHeight + 30;
+          // Vertical Scroll Ads element 
+          const verticalScrollEle = parentVerticalEle.closest(".vertical-scroll");
+          if (verticalScrollEle) {
+            // @ts-ignore
+            screenHeight = verticalScrollEle.offsetHeight + transformY;
           }
+
+          let position = null;
+          let distanceScrollVertical = 0;
+          let scrollChecking = null;
+          if (
+            scrollPositionValue &&
+            (scrollPosition == "top" || scrollPosition == "bottom")
+          ) {
+            if (scrollPosition == "top") {
+              distanceScrollVertical = scrollPositionValue;
+            }
+            if (scrollPosition == "bottom") {
+              distanceScrollVertical = scrollPositionValue + ele.offsetHeight;
+            }
+          } else {
+            position = (screenHeight - ele.offsetHeight) / 2;
+            distanceScrollVertical = rectEle.top - rectParentEle.top - position;
+            scrollChecking =  parentVerticalEle.offsetHeight - distanceScrollVertical;
+            
+            if (scrollChecking < screenHeight) {
+              distanceScrollVertical =
+                parentVerticalEle.offsetHeight - screenHeight + 30;
+            }
+          }
+          // @ts-ignore
+          ele.dataset["distanceScrollVertical"] = distanceScrollVertical;
+        } else if (parentVerticalEleHeight < childNodesHeight) {
+            console.log('ele.dataset["distanceScrollVertical"]');
+            let pPos = parentVerticalEle.getBoundingClientRect(), // parent container pos
+            cPos = ele.getBoundingClientRect(), // target pos
+            pos = {};
+
+            pos.top    = ( cPos.top - ( parentVerticalEle.childNodes[0].offsetHeight - cPos.height)) - pPos.top + parentVerticalEle.scrollTop,
+            pos.right  = cPos.right  - pPos.right,
+            pos.bottom = cPos.bottom - pPos.bottom,
+            pos.left   = cPos.left   - pPos.left;
+            ele.dataset["distanceHiddenScrollVertical"] = pos.top;
+        } else {
+          return false;
         }
-        // @ts-ignore
-        ele.dataset["distanceScrollVertical"] = distanceScrollVertical;
+        
       }
     },
     // @ts-ignore

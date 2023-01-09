@@ -1,7 +1,7 @@
-import { focus } from "store/focus.js";
+import { focus } from "$stores/focus.js";
 import { writable, get } from "svelte/store";
 import { keyboardStore } from "./keyboard";
-import { OVERLAY_DURATION } from "utils/constant";
+import { OVERLAY_DURATION } from "$utils/constant";
 
 const paramsDefault = {
   list: [],
